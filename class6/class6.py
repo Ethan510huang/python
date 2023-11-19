@@ -31,9 +31,9 @@
 #         print("error")
 
 
-y = int(input("請輸入次數"))
-for x in range(1, (y + 1)):
-    if x % 10 == 0:
-        print("rest")
-        continue
-    print("第" + str(x) + "次跳繩")
+# y = int(input("請輸入次數"))
+# for x in range(1, (y + 1)):
+#     if x % 10 == 0:
+#         print("rest")
+#         continue
+#     print("第" + str(x) + "次跳繩")
