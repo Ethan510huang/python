@@ -1,5 +1,7 @@
 import network
 from machine import Pin, PWM
+from umqtt.simple import MQTTClient
+import sys
 
 
 class gpio:
@@ -16,60 +18,49 @@ class gpio:
         self._SDD3 = 10
         self._SDD2 = 9
 
+    @property
+    def D0(self):
+        return self._D0
 
-@property
-def D0(self):
-    return self._D0
+    @property
+    def D1(self):
+        return self._D1
 
+    @property
+    def D2(self):
+        return self._D2
 
-@property
-def D1(self):
-    return self._D1
+    @property
+    def D3(self):
+        return self._D3
 
+    @property
+    def D4(self):
+        return self._D4
 
-@property
-def D2(self):
-    return self._D2
+    @property
+    def D5(self):
+        return self._D5
 
+    @property
+    def D6(self):
+        return self._D6
 
-@property
-def D3(self):
-    return self._D3
+    @property
+    def D7(self):
+        return self._D7
 
+    @property
+    def D8(self):
+        return self._D8
 
-@property
-def D4(self):
-    return self._D4
+    @property
+    def SDD3(self):
+        return self._SDD3
 
-
-@property
-def D5(self):
-    return self._D5
-
-
-@property
-def D6(self):
-    return self._D6
-
-
-@property
-def D7(self):
-    return self._D7
-
-
-@property
-def D8(self):
-    return self._D8
-
-
-@property
-def SDD3(self):
-    return self._SDD3
-
-
-@property
-def SDD2(self):
-    return self._SDD2
+    @property
+    def SDD2(self):
+        return self._SDD2
 
 
 class wifi:
@@ -139,3 +130,34 @@ class LED:
             self.RED = PWM(Pin(r_pin), freq=frequency, duty=duty_cycle)
             self.GREEN = PWM(Pin(g_pin), freq=frequency, duty=duty_cycle)
             self.BLUE = PWM(Pin(b_pin), freq=frequency, duty=duty_cycle)
+
+
+class MQTT:
+    def __init__(self, mqttClientId, mq_server, mqtt_username, mqtt_password):
+        self.mq_server = mq_server
+        self.mqttClientId = mqttClientId
+        self.mqtt_username = mqtt_username
+        self.mqtt_password = mqtt_password
+        self.Client = MQTTClient(
+            mqttClientId,
+            mq_server,
+            user=mqtt_username,
+            password=mqtt_password,
+            keepalive=30,
+        )
+
+    def connect(self):
+        try:
+            self.Client.connect()
+        except:
+            sys.exit()
+        finally:
+            print("connected MQTT server")
+
+    def subscribe(self, topic, on_message):
+        self.Client.set_callback(on_message)
+        self.Client.subscribe(topic)
+
+    def check_msg(self):
+        self.Client.check_msg()
+        self.Client.ping()
